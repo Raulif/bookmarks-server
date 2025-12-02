@@ -1,11 +1,14 @@
-import { deleteDeleted, getAll, getAllDeleted, postMany } from './firebase.ts'
+import { Context } from '@oak/oak/context'
 import {
-  Bookmark,
-  ContextBookmarks,
-  ContextDeletedBookmarks,
-} from './types.d.ts'
+  deleteDeleted,
+  getAll,
+  getAllDeleted,
+  postMany,
+  updateMany,
+} from './firebase.ts'
+import { Bookmark } from './types.d.ts'
 
-export const getBookmarks = async (ctx: ContextBookmarks) => {
+export const getBookmarks = async (ctx: Context) => {
   try {
     const bookmarks = await getAll()
     ctx.response.body = bookmarks
@@ -18,7 +21,7 @@ export const getBookmarks = async (ctx: ContextBookmarks) => {
   }
 }
 
-export const postBookmarks = async (ctx: ContextBookmarks) => {
+export const postBookmarks = async (ctx: Context) => {
   try {
     const bookmarks = await ctx.request.body.json()
     await postMany(bookmarks as unknown as Array<Bookmark>)
@@ -30,7 +33,7 @@ export const postBookmarks = async (ctx: ContextBookmarks) => {
   }
 }
 
-export const deleteBookmarks = async (ctx: ContextBookmarks) => {
+export const deleteBookmarks = async (ctx: Context) => {
   try {
     await deleteDeleted()
     ctx.response.status = 200
@@ -41,7 +44,7 @@ export const deleteBookmarks = async (ctx: ContextBookmarks) => {
   }
 }
 
-export const getDeletedBookmarks = async (ctx: ContextDeletedBookmarks) => {
+export const getDeletedBookmarks = async (ctx: Context) => {
   try {
     const deletedBookmarks = await getAllDeleted()
     ctx.response.body = deletedBookmarks
@@ -53,7 +56,7 @@ export const getDeletedBookmarks = async (ctx: ContextDeletedBookmarks) => {
   }
 }
 
-export const updateBookmarksCollection = async (ctx: ContextBookmarks) => {
+export const updateBookmarksCollection = async (ctx: Context) => {
   try {
     const browserBookmarks = (await ctx.request.body.json()) as Array<Bookmark>
     const dbBookmarks = await getAll()
@@ -74,6 +77,24 @@ export const updateBookmarksCollection = async (ctx: ContextBookmarks) => {
       await postMany(browserBookmarks)
     }
     await deleteDeleted()
+  } catch (e) {
+    console.error(e)
+    console.error('Error in updateBookmarksCollection')
+    ctx.response.status = 500
+  }
+}
+
+export const updateIds = async (ctx: Context) => {
+  try {
+    const bookmarks = await getAll()
+    const updatedBookmarks = bookmarks?.map((bm) => {
+      const { id } = bm
+      const [realId] = id.split('-')
+      bm.id = realId
+      return bm
+    }) as Array<Bookmark>
+    await updateMany(updatedBookmarks)
+    ctx.response.status = 200
   } catch (e) {
     console.error(e)
     console.error('Error in updateBookmarksCollection')

@@ -87,6 +87,22 @@ export const deleteDeleted = async () => {
   }
 }
 
+export const updateMany = async (bookmarks: Array<Bookmark>) => {
+  try {
+    const batch = writeBatch(database)
+    for (const bookmark of bookmarks) {
+      const updateDoc = doc(collection(database, 'bookmarks'), bookmark.dbId)
+
+      batch.update(updateDoc, { ...bookmark })
+    }
+
+    await batch.commit()
+  } catch (e) {
+    console.error(e)
+    console.error('Error on updateMany')
+  }
+}
+
 export const getAllDeleted = async () => {
   try {
     const bookmarksCollection = collection(database, 'bookmarks')
@@ -99,3 +115,4 @@ export const getAllDeleted = async () => {
     console.error('Error getAllDeleted: ', e)
   }
 }
+

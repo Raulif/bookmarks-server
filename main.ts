@@ -5,6 +5,7 @@ import {
   getBookmarks,
   getDeletedBookmarks,
   updateBookmarksCollection,
+  updateIds,
 } from './route-handlers.ts'
 
 const app = new Application()
@@ -20,11 +21,13 @@ router.get('/', (ctx) => {
   ctx.response.status = 200
   ctx.response.body = 'Bookmarks Server listening'
 })
+
 router.get('/bookmarks', getBookmarks)
 router.post('/bookmarks', updateBookmarksCollection)
 router.delete('/bookmarks', deleteBookmarks)
-router.get('/bookmarks/deleted', getDeletedBookmarks)
 
+router.put('/bookmarks/update-ids', updateIds)
+router.get('/bookmarks/deleted', getDeletedBookmarks)
 
 app.use(router.routes())
 app.use(router.allowedMethods())
