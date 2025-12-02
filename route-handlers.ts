@@ -13,6 +13,8 @@ export const getBookmarks = async (ctx: Context) => {
     const bookmarks = await getAll()
     ctx.response.body = bookmarks
     ctx.response.status = 200
+    ctx.response.body = { ok: true }
+
     return ctx
   } catch (e) {
     console.error(e)
@@ -26,6 +28,7 @@ export const postBookmarks = async (ctx: Context) => {
     const bookmarks = await ctx.request.body.json()
     await postMany(bookmarks as unknown as Array<Bookmark>)
     ctx.response.status = 200
+    ctx.response.body = { ok: true }
   } catch (e) {
     console.error(e)
     console.error('Error in postBookmarks')
@@ -37,6 +40,7 @@ export const deleteBookmarks = async (ctx: Context) => {
   try {
     await deleteDeleted()
     ctx.response.status = 200
+    ctx.response.body = { ok: true }
   } catch (e) {
     console.error(e)
     console.error('Error in deleteBookmarks')
@@ -49,6 +53,7 @@ export const getDeletedBookmarks = async (ctx: Context) => {
     const deletedBookmarks = await getAllDeleted()
     ctx.response.body = deletedBookmarks
     ctx.response.status = 200
+    ctx.response.body = { ok: true }
   } catch (e) {
     console.error(e)
     console.error('Error in getDeletedBookmarks')
@@ -80,6 +85,7 @@ export const updateBookmarksCollection = async (ctx: Context) => {
     }
     await deleteDeleted()
     ctx.response.status = 200
+    ctx.response.body = { ok: true }
   } catch (e) {
     console.error(e)
     console.error('Error in updateBookmarksCollection')
@@ -98,6 +104,7 @@ export const updateIds = async (ctx: Context) => {
     }) as Array<Bookmark>
     await updateMany(updatedBookmarks)
     ctx.response.status = 200
+    ctx.response.body = { ok: true }
   } catch (e) {
     console.error(e)
     console.error('Error in updateBookmarksCollection')
