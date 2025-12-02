@@ -6,6 +6,5 @@
     "@oak/oak": "jsr:@oak/oak@^17.2.0",
     "@std/assert": "jsr:@std/assert@1",
     "firebase": "npm:firebase@^12.6.0"
-  },
-  "nodeModulesDir": "auto"
+  }
 }
