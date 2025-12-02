@@ -57,9 +57,10 @@ export const getDeletedBookmarks = async (ctx: Context) => {
 }
 
 export const updateBookmarksCollection = async (ctx: Context) => {
-  console.log('In updateBookmarksCollection');
+  console.log('In updateBookmarksCollection')
   try {
     const browserBookmarks = (await ctx.request.body.json()) as Array<Bookmark>
+    console.log(browserBookmarks[0])
     const dbBookmarks = await getAll()
 
     if (dbBookmarks?.length) {
@@ -78,6 +79,7 @@ export const updateBookmarksCollection = async (ctx: Context) => {
       await postMany(browserBookmarks)
     }
     await deleteDeleted()
+    ctx.response.status = 200
   } catch (e) {
     console.error(e)
     console.error('Error in updateBookmarksCollection')
