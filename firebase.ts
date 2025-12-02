@@ -75,7 +75,7 @@ export const deleteDeleted = async () => {
     }
     await Promise.all(
       deletedBookmarks.map(async (bm) => {
-        const bookmarkDoc = doc(bookmarksCollection, bm.id)
+        const bookmarkDoc = doc(bookmarksCollection, bm.dbId)
         if (bookmarkDoc) {
           await deleteDoc(bookmarkDoc)
         }
