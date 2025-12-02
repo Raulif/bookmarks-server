@@ -13,14 +13,16 @@ import {
 
 import type { Bookmark } from './types.d.ts'
 
+const projectId = Deno.env.get('FIREBASE_PROJECT_ID')
+
 const firebaseConfig = {
   apiKey: Deno.env.get('FIREBASE_API_KEY'),
-  authDomain: 'bookmarks-angular-f86d4.firebaseapp.com',
-  databaseURL: Deno.env.get('FIREBASE_DATABASE_URL'),
-  projectId: 'bookmarks-angular-f86d4',
-  storageBucket: 'bookmarks-angular-f86d4.firebasestorage.app',
-  messagingSenderId: '163213790936',
-  appId: '1:163213790936:web:96c055ce734183d34c11ad',
+  projectId,
+  authDomain: `${projectId}.firebaseapp.com`,
+  databaseURL: `https://${projectId}-default-rtdb-default-rtdb.europe-west1.firebasedatabase.app/`,
+  storageBucket: `${projectId}.firebasestorage.app`,
+  messagingSenderId: Deno.env.get('FIREBASE_MESSAGING_SENDER_ID'),
+  appId: Deno.env.get('FIREBASE_APP_ID'),
 }
 
 const app = initializeApp(firebaseConfig)
