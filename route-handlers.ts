@@ -61,8 +61,9 @@ export const getDeletedBookmarks = async (ctx: Context) => {
 export const updateBookmarksCollection = async (ctx: Context) => {
   try {
     const browserBookmarks = (await ctx.request.body.json()) as Array<Bookmark>
+    console.log(`Bookmarks sent from browser: ${browserBookmarks?.length ?? 0}`)
     const dbBookmarks = await getAll()
-
+    console.log(`Bookmarks found in DB: ${dbBookmarks?.length ?? 0}`):
     if (dbBookmarks?.length) {
       const newBookmarks = browserBookmarks.reduce<Array<Bookmark>>(
         (acc, browserBm) => {
@@ -74,8 +75,10 @@ export const updateBookmarksCollection = async (ctx: Context) => {
         },
         []
       )
+      console.log(`New browser bookmarks to store: ${newBookmarks?.length ?? 0}`)
       await postMany(newBookmarks)
     } else {
+      console.log('No Bookmarks currently found in DB. Saving all bookmarks sent from browser.')
       await postMany(browserBookmarks)
     }
     await deleteDeleted()
