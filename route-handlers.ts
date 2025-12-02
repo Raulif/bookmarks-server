@@ -13,8 +13,6 @@ export const getBookmarks = async (ctx: Context) => {
     const bookmarks = await getAll()
     ctx.response.body = bookmarks
     ctx.response.status = 200
-    ctx.response.body = { ok: true }
-
     return ctx
   } catch (e) {
     console.error(e)
@@ -53,7 +51,6 @@ export const getDeletedBookmarks = async (ctx: Context) => {
     const deletedBookmarks = await getAllDeleted()
     ctx.response.body = deletedBookmarks
     ctx.response.status = 200
-    ctx.response.body = { ok: true }
   } catch (e) {
     console.error(e)
     console.error('Error in getDeletedBookmarks')
@@ -62,10 +59,8 @@ export const getDeletedBookmarks = async (ctx: Context) => {
 }
 
 export const updateBookmarksCollection = async (ctx: Context) => {
-  console.log('In updateBookmarksCollection')
   try {
     const browserBookmarks = (await ctx.request.body.json()) as Array<Bookmark>
-    console.log(browserBookmarks[0])
     const dbBookmarks = await getAll()
 
     if (dbBookmarks?.length) {

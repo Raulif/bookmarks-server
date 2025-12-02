@@ -70,9 +70,13 @@ export const deleteDeleted = async () => {
   try {
     const bookmarksCollection = collection(database, 'bookmarks')
     const deletedBookmarks = await getAllDeleted()
+    console.log(
+      `Found ${deletedBookmarks?.length ?? 'no'} Bookmarks to delete`
+    )
     if (!deletedBookmarks?.length) {
       return false
     }
+
     await Promise.all(
       deletedBookmarks.map(async (bm) => {
         const bookmarkDoc = doc(bookmarksCollection, bm.dbId)
@@ -89,6 +93,7 @@ export const deleteDeleted = async () => {
 
 export const updateMany = async (bookmarks: Array<Bookmark>) => {
   try {
+    console.log(`Updating ${bookmarks?.length ?? 0} bookmarks`)
     const batch = writeBatch(database)
     for (const bookmark of bookmarks) {
       const updateDoc = doc(collection(database, 'bookmarks'), bookmark.dbId)
@@ -115,4 +120,3 @@ export const getAllDeleted = async () => {
     console.error('Error getAllDeleted: ', e)
   }
 }
-
