@@ -7,6 +7,7 @@ import {
   getDocsFromCache,
   getFirestore,
   query,
+  updateDoc,
   where,
   writeBatch,
 } from 'firebase/firestore'
@@ -70,9 +71,7 @@ export const deleteDeleted = async () => {
   try {
     const bookmarksCollection = collection(database, 'bookmarks')
     const deletedBookmarks = await getAllDeleted()
-    console.log(
-      `Found ${deletedBookmarks?.length ?? 'no'} Bookmarks to delete`
-    )
+    console.log(`Found ${deletedBookmarks?.length ?? 'no'} Bookmarks to delete`)
     if (!deletedBookmarks?.length) {
       return false
     }
@@ -118,5 +117,15 @@ export const getAllDeleted = async () => {
     return docs
   } catch (e) {
     console.error('Error getAllDeleted: ', e)
+  }
+}
+
+export const updateSingle = async (bookmark: Bookmark) => {
+  try {
+    const bmDoc = doc(collection(database, 'bookmarks'), bookmark.dbId)
+    await updateDoc(bmDoc, { ...bookmark })
+    return true
+  } catch (e) {
+    console.error('Error updateSingle: ', e)
   }
 }

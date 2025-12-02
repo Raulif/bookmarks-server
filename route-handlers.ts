@@ -5,6 +5,7 @@ import {
   getAllDeleted,
   postMany,
   updateMany,
+  updateSingle,
 } from './firebase.ts'
 import { Bookmark } from './types.d.ts'
 
@@ -105,6 +106,20 @@ export const updateIds = async (ctx: Context) => {
       return bm
     }) as Array<Bookmark>
     await updateMany(updatedBookmarks)
+    ctx.response.status = 200
+    ctx.response.body = { ok: true }
+  } catch (e) {
+    console.error(e)
+    console.error('Error in updateBookmarksCollection')
+    ctx.response.status = 500
+  }
+}
+
+export const updateSingleBookmark = async (ctx: Context) => {
+  try {
+    const bookmark: Bookmark = await ctx.request.body.json()
+    console.log('Updating bookmark with DB id: ', bookmark.dbId)
+    await updateSingle(bookmark)
     ctx.response.status = 200
     ctx.response.body = { ok: true }
   } catch (e) {

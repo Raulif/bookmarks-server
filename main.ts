@@ -6,6 +6,7 @@ import {
   getDeletedBookmarks,
   updateBookmarksCollection,
   updateIds,
+  updateSingleBookmark,
 } from './route-handlers.ts'
 
 const app = new Application()
@@ -25,6 +26,7 @@ router.get('/', (ctx) => {
 router.get('/bookmarks', getBookmarks)
 router.post('/bookmarks', updateBookmarksCollection)
 router.delete('/bookmarks', deleteBookmarks)
+router.put('/bookmarks', updateSingleBookmark)
 
 router.put('/bookmarks/update-ids', updateIds)
 router.get('/bookmarks/deleted', getDeletedBookmarks)
