@@ -57,7 +57,7 @@ export const getDeletedBookmarks = async (ctx: Context) => {
 }
 
 export const updateBookmarksCollection = async (ctx: Context) => {
-  console.log('In updateBookmarksCollection')
+  console.log('In updateBookmarksCollection');
   try {
     const browserBookmarks = (await ctx.request.body.json()) as Array<Bookmark>    console.log()
     const dbBookmarks = await getAll()
