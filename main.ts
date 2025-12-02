@@ -20,6 +20,10 @@ router.get('/bookmarks/deleted', getDeletedBookmarks)
 
 const app = new Application()
 
+app.use((ctx, next) => {
+  ctx.response.headers.set('Access-Control-Allow-Origin', '*')
+  return next()
+})
 app.use(router.routes())
 app.use(router.allowedMethods())
 
