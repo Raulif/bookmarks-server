@@ -4,15 +4,17 @@ import {
   deleteDoc,
   doc,
   getDocs,
-  getDocsFromCache,
   getFirestore,
   query,
   updateDoc,
   where,
   writeBatch,
+  limit,
+  startAt
 } from 'firebase/firestore'
 
 import type { Bookmark } from './types.d.ts'
+import { QUERY_LIMIT } from "./constants.ts";
 
 const projectId = Deno.env.get('FIREBASE_PROJECT_ID')
 
@@ -30,22 +32,16 @@ const app = initializeApp(firebaseConfig)
 
 const database = getFirestore(app)
 
-export const getAll = async () => {
+export const getMany = async (cursor: number) => {
   try {
     const bookmarksCollection = collection(database, 'bookmarks')
     const docs = [] as Array<Bookmark>
-
-    const cachedQueryRes = await getDocsFromCache(bookmarksCollection)
-    cachedQueryRes.forEach((doc) => docs.push(doc.data() as Bookmark))
-    if (docs.length) {
-      return docs
-    }
-
-    const queryRes = await getDocs(bookmarksCollection)
-    queryRes.forEach((doc) => docs.push(doc.data() as Bookmark))
+    const q = query(bookmarksCollection, startAt(cursor), limit(QUERY_LIMIT))
+    const response = await getDocs(q)
+    response.forEach((doc) => docs.push(doc.data() as Bookmark))
     return docs
   } catch (e) {
-    console.error('Error getAll: ', e)
+    console.error('Error getMany: ', e)
   }
 }
 

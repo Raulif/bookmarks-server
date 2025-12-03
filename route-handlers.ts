@@ -1,8 +1,9 @@
 import { Context } from '@oak/oak/context'
+import { QUERY_LIMIT } from './constants.ts'
 import {
   deleteDeleted,
-  getAll,
   getAllDeleted,
+  getMany,
   postMany,
   updateMany,
   updateSingle,
@@ -11,8 +12,11 @@ import { Bookmark } from './types.d.ts'
 
 export const getBookmarks = async (ctx: Context) => {
   try {
-    const bookmarks = await getAll()
-    ctx.response.body = bookmarks
+    const body = await ctx.request?.body?.json()
+    const currentCursor = body?.cursor ?? 0
+    const bookmarks = await getMany(currentCursor)
+
+    ctx.response.body = { bookmarks, cursor: currentCursor + QUERY_LIMIT }
     ctx.response.status = 200
     return ctx
   } catch (e) {
@@ -63,7 +67,7 @@ export const updateBookmarksCollection = async (ctx: Context) => {
   try {
     const browserBookmarks = (await ctx.request.body.json()) as Array<Bookmark>
     console.log(`Bookmarks sent from browser: ${browserBookmarks?.length ?? 0}`)
-    const dbBookmarks = await getAll()
+    const dbBookmarks = await getMany()
     console.log(`Bookmarks found in DB: ${dbBookmarks?.length ?? 0}`)
     if (dbBookmarks?.length) {
       const newBookmarks = browserBookmarks.reduce<Array<Bookmark>>(
@@ -98,7 +102,7 @@ export const updateBookmarksCollection = async (ctx: Context) => {
 
 export const updateIds = async (ctx: Context) => {
   try {
-    const bookmarks = await getAll()
+    const bookmarks = await getMany()
     const updatedBookmarks = bookmarks?.map((bm) => {
       const { id } = bm
       const [realId] = id.split('-')
