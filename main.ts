@@ -13,6 +13,10 @@ const app = new Application()
 
 app.use((ctx, next) => {
   ctx.response.headers.set('Access-Control-Allow-Origin', '*')
+  ctx.response.headers.set(
+    'Access-Control-Allow-Methods',
+    'GET,POST,PUT,POST,OPTIONS'
+  )
   return next()
 })
 

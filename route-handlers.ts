@@ -118,7 +118,7 @@ export const updateIds = async (ctx: Context) => {
 export const updateSingleBookmark = async (ctx: Context) => {
   try {
     const bookmark: Bookmark = await ctx.request.body.json()
-    console.log('Updating bookmark with DB id: ', bookmark.dbId)
+    console.log('Updating bookmark with DB id: ', bookmark?.dbId)
     await updateSingle(bookmark)
     ctx.response.status = 200
     ctx.response.body = { ok: true }
