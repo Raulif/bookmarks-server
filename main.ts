@@ -15,7 +15,7 @@ app.use((ctx, next) => {
   ctx.response.headers.set('Access-Control-Allow-Origin', '*')
   ctx.response.headers.set(
     'Access-Control-Allow-Methods',
-    'GET,POST,PUT,POST,OPTIONS'
+    'GET,POST,PUT,DELETE,OPTIONS'
   )
   return next()
 })
